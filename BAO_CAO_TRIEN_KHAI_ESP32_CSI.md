@@ -125,30 +125,6 @@ python -u tools/listen_udp_csi.py
 python tools/verify_csi_packet.py
 ```
 
-### 7️⃣ Chạy Trình Ghi Bộ Dữ Liệu Thực Nghiệm (Dataset Recorder):
-*Thu thập 60 giây dữ liệu Phòng trống (`idle_01.pkl`):*
-```bash
-python tools/record_csi_dataset.py --output idle_01.pkl --duration 60
-```
-*Thu thập 60 giây dữ liệu Người di chuyển (`motion_01.pkl`):*
-```bash
-python tools/record_csi_dataset.py --output motion_01.pkl --duration 60
-```
-
----
-
-## 6. Bước tiếp theo
-Sau khi hệ thống đã phát gói tin UDP thành công:
-1. Thu thập tập dữ liệu nền phòng trống (`idle_01.pkl`):
-   ```bash
-   python tools/record_csi_dataset.py --output idle_01.pkl --duration 60
-   ```
-2. Thu thập tập dữ liệu khi có người di chuyển (`motion_01.pkl`):
-   ```bash
-   python tools/record_csi_dataset.py --output motion_01.pkl --duration 60
-   ```
-3. Đưa tập dữ liệu thu được vào pipeline mô hình nhận diện sự hiện diện / sinh hiệu RuView.
-
 ---
 
 ## 7. Mở rộng triển khai: Cấu hình mạng động & Xử lý Hotspot Điện thoại (Redmi Note 14 5G)
