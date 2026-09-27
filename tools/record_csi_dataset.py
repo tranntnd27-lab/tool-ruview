@@ -21,6 +21,7 @@ def main():
     parser = argparse.ArgumentParser(description="RuView CSI Dataset Recorder")
     parser.add_argument("--output", "-o", type=str, default="idle_01.pkl", help="File đầu ra (.pkl)")
     parser.add_argument("--duration", "-d", type=int, default=60, help="Thời gian thu (giây)")
+    parser.add_argument("--delay", type=int, default=5, help="Thời gian đếm ngược trước khi thu (giây, mặc định 5s)")
     parser.add_argument("--port", "-p", type=int, default=5005, help="Cổng UDP (mặc định 5005)")
     args = parser.parse_args()
 
@@ -39,16 +40,24 @@ def main():
     print("=" * 65)
     print(f"  Tên file đầu ra : {args.output}")
     print(f"  Thời gian thu    : {args.duration} giây")
+    print(f"  Thời gian trễ    : {args.delay} giây (Đếm ngược bước ra khỏi phòng)")
     print(f"  Cổng UDP         : {args.port}")
     print("-" * 65)
 
     if "idle" in args.output.lower():
-        print("👉 HƯỚNG DẪN: Giữ phòng trống HOÀN TOÀN TĨNH trong suốt quá trình thu!")
+        print("👉 HƯỚNG DẪN: Bấm Enter -> Có 5 giây bước ra khỏi phòng & đóng cửa!")
     elif "motion" in args.output.lower():
         print("👉 HƯỚNG DẪN: Cho người di chuyển, bước đi trong khu vực phủ sóng Wi-Fi!")
     print("-" * 65)
 
-    input("Bấm Enter để BẮT ĐẦU THU DỮ LIỆU...")
+    input("Bấm Enter để BẮT ĐẦU ĐẾM NGƯỢC...")
+
+    if args.delay > 0:
+        print("\n⏳ ĐĂNG ĐẾM NGƯỢC THỜI GIAN ĐỂ BẠN BƯỚC RA KHỎI PHÒNG & ĐÓNG CỬA:")
+        for sec in range(args.delay, 0, -1):
+            print(f"   ⏱️ Còn {sec} giây... (Hãy bước ra ngoài ngay)", flush=True)
+            time.sleep(1)
+        print("🔴 BẮT ĐẦU CHÍNH THỨC THU DỮ LIỆU SÓNG PHÒNG TRỐNG!\n")
 
     start_time = time.time()
     end_time = start_time + args.duration

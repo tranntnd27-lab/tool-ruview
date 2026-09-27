@@ -21,6 +21,7 @@ def main():
     parser.add_argument("file", nargs="?", default="idle_01.pkl", help="Path to .pkl dataset file (default: idle_01.pkl)")
     parser.add_argument("--save", "-s", type=str, default="csi_visual_analysis.png", help="PNG output path")
     parser.add_argument("--show", action="store_true", help="Display GUI window")
+    parser.add_argument("--norm", action="store_true", help="Bù trừ khuếch đại AGC / RSSI Normalization")
     args = parser.parse_args()
 
     filepath = args.file
@@ -46,12 +47,16 @@ def main():
                 iq_bytes = raw_data[20:]
                 num_subcarriers = len(iq_bytes) // 2
 
+                # Compute scale factor for AGC normalization if requested
+                scale = 10.0 ** (rssi / 20.0) if args.norm else 1.0
+
                 amps = []
                 phases = []
                 for idx in range(num_subcarriers):
                     i_val = struct.unpack("b", iq_bytes[2*idx:2*idx+1])[0]
                     q_val = struct.unpack("b", iq_bytes[2*idx+1:2*idx+2])[0]
-                    amps.append(math.sqrt(i_val**2 + q_val**2))
+                    amp = math.sqrt(i_val**2 + q_val**2) * scale
+                    amps.append(amp)
                     phases.append(math.atan2(q_val, i_val))
 
                 # Ensure uniform subcarrier count (e.g. 64) for clean matrix operations
